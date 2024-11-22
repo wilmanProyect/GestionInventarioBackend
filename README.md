@@ -1,86 +1,120 @@
-Como usar este proyecto
+# Guía para Usar este Proyecto
 
-Pasos:
+## Pasos para Ejecutar el Proyecto
 
-1.- Installar las dependencias: npm install 
-2.- Correr el proyecto: node server.js
-3.- utilizar postman
------------------------------------------------------------------------------------------------------------------------------
-    metodo POST:
-        register:  http://localhost:3000/users/register
-                        
-                opciones:     Body -> raw -> JSON:
-                    {
-                    "nombre": "german",
-                    "email": "german@gmail.com",
-                    "password": "asdfasdf",
-                    "rol": "user"
-                    }
-                ![alt text](image-1.png)
+1. **Instalar las dependencias**:
+   ```
+   npm install
+   ```
 
+2. **Correr el servidor**:
+   ```
+   node server.js
+   ```
 
-        **********************************************************************************************
-        login:  http://localhost:3000/users/login
-                    
-        opciones:     Body -> raw -> JSON:
-                {
-                "email": "german@gmail.com",
-                "password": "asdfasdf"
-                }   
-        - obtenemos el token y Copiamos 
+3. **Usar Postman** para probar los diferentes endpoints.
 
-        ![alt text](image.png)
-        **********************************************************************************************
+## Endpoints Disponibles
 
-        Añadir un nuevo producto solo usuarios (ADMIN): http://localhost:3000/product
+### 1. Registro de Usuario (POST `/users/register`)
+**URL**: `http://localhost:3000/users/register`
 
-            opciones: - autorization -> bearToken -> pegamos el token copiado en el login
-                        Click en Send y nos retorna todos los productos de la base de dato de la categoria requerida    
-                      - Body -> raw -> JSON:
-        ![alt text](image-2.png)
------------------------------------------------------------------------------------------------------------------------------        
-    Metodo GET: 
-        Obtener poductos: http://localhost:3000/product
+- **Método**: POST
+- **Cuerpo de la Solicitud** (JSON):
+  ```json
+  {
+    "nombre": "german",
+    "email": "german@gmail.com",
+    "password": "asdfasdf",
+    "rol": "user"
+  }
+  ```
+- **Descripción**: Registra un nuevo usuario en el sistema.
 
-        opciones: autorization -> bearToken -> pegamos el token copiado en el login
-        Click en Send y nos retorna todos los productos de la base de dato
-        ![alt text](image-5.png)
-        **********************************************************************************************
-        Obtener poductos por categoria: http://localhost:3000/product?categoria=Ropa
+![Registro de Usuario](image-1.png)
 
-        opciones: autorization -> bearToken -> pegamos el token copiado en el login
-        Click en Send y nos retorna todos los productos de la base de dato de la categoria requerida
-        ![alt text](image-6.png)
-----------------------------------------------------------------------------------------------------------------------------       
-    metodo PUT Solo usuarios (ADMIN):
-        Editar un producto:  http://localhost:3000/product/673e2615e41eb889a2d5151e
+### 2. Inicio de Sesión (POST `/users/login`)
+**URL**: `http://localhost:3000/users/login`
 
-                nota: Colocar el ID del producto a Editar   
+- **Método**: POST
+- **Cuerpo de la Solicitud** (JSON):
+  ```json
+  {
+    "email": "german@gmail.com",
+    "password": "asdfasdf"
+  }
+  ```
+- **Descripción**: Autentica un usuario y devuelve un token JWT. Copia el token para usarlo en las siguientes solicitudes.
 
-                opciones: - autorization -> bearToken -> pegamos el token copiado en el login
-                            Click en Send y nos retorna todos los productos de la base de dato de la categoria requerida     
-                          - Body -> raw -> JSON:
-                    {
-                    "nombre": "Laptop HP",
-                    "categoria": "tecnología",
-                    "precio": 1600,
-                    "stock": 20
-                    }
-            ![alt text](image-3.png)   
+![Inicio de Sesión](image.png)
 
+### 3. Crear un Producto (POST `/api/productos`)
+**URL**: `http://localhost:3000/api/productos`
 
------------------------------------------------------------------------------------------------------------------------------
-        metodo DELETE Solo usuarios (ADMIN):
+- **Método**: POST
+- **Requiere Autorización**: Sí, solo administradores.
+- **Headers**: `Authorization: Bearer <token_admin>`
+- **Cuerpo de la Solicitud** (JSON):
+  ```json
+  {
+    "nombre": "Laptop HP",
+    "categoria": "tecnología",
+    "precio": 1600,
+    "stock": 20
+  }
+  ```
+- **Descripción**: Añade un nuevo producto al inventario.
 
-        Editar un producto:  http://localhost:3000/product/673e2615e41eb889a2d5151e
-                nota: Colocar el ID del producto a eliminar       
-                opciones: - autorization -> bearToken -> pegamos el token copiado en el login
-                            Click en Send y nos retorna todos los productos de la base de dato de la categoria requerida     
-                          - Body -> raw -> JSON:
-                    {
-                    "nombre": "Laptop HP",
-                    "categoria": "tecnología",
-                    "precio": 1600,
-                    "stock": 20
-                    }
-            ![alt text](image-4.png)    
+![Añadir Producto](image-2.png)
+
+### 4. Obtener Todos los Productos (GET `/api/productos`)
+**URL**: `http://localhost:3000/api/productos`
+
+- **Método**: GET
+- **Descripción**: Obtiene la lista de todos los productos disponibles en la base de datos.
+
+![Obtener Productos](image-5.png)
+
+### 5. Obtener Productos por Categoría (GET `/api/productos?categoria=categoria`)
+**URL**: `http://localhost:3000/api/productos?categoria=Ropa`
+
+- **Método**: GET
+- **Descripción**: Obtiene los productos que pertenecen a una categoría específica.
+
+![Obtener Productos por Categoría](image-6.png)
+
+### 6. Editar un Producto (PUT `/api/productos/:id`)
+**URL**: `http://localhost:3000/api/productos/:id`
+
+- **Método**: PUT
+- **Requiere Autorización**: Sí, solo administradores.
+- **Headers**: `Authorization: Bearer <token_admin>`
+- **Cuerpo de la Solicitud** (JSON):
+  ```json
+  {
+    "nombre": "Laptop HP",
+    "categoria": "tecnología",
+    "precio": 1700,
+    "stock": 15
+  }
+  ```
+- **Descripción**: Edita un producto existente especificando su ID.
+
+![Editar Producto](image-3.png)
+
+### 7. Eliminar un Producto (DELETE `/api/productos/:id`)
+**URL**: `http://localhost:3000/api/productos/:id`
+
+- **Método**: DELETE
+- **Requiere Autorización**: Sí, solo administradores.
+- **Headers**: `Authorization: Bearer <token_admin>`
+- **Descripción**: Elimina un producto del inventario especificando su ID.
+
+![Eliminar Producto](image-4.png)
+
+## Notas Adicionales
+- Para los métodos protegidos (crear, editar, eliminar productos), asegúrate de incluir el token de autorización en los headers para autenticarte como administrador.
+- Utiliza Postman para probar cada uno de los endpoints, siguiendo los ejemplos proporcionados.
+
+Si tienes alguna duda sobre cómo usar el proyecto, no dudes en consultar los ejemplos visuales y las instrucciones detalladas.
+
